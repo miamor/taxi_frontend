@@ -458,14 +458,25 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('PasswordCtrl', function($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicNavBarDelegate, $ionicLoading, PasswordService {
+.controller('PasswordCtrl', function($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicNavBarDelegate, $ionicLoading, PasswordService) {
     $scope.data = {};
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
     $scope.changePassword = function() {
         console.log($scope.data.password);
         console.log($scope.data.confirmpassword);
-        if ($scope.data.password === $scope.data.confirmpassword) {
-            PasswordService.change($scope.data.password, taxiData.id);
+        if ($scope.data.password == $scope.data.confirmpassword) {
+            PasswordService.change($scope.data.password, taxiData.id).then(function(data) {
+                console.log(data);
+                if (data == 0) { // system error
+
+                } else if (data == -1) { // missing fields
+
+                } else {
+                    newPassword = data.newPassword;
+                }
+            })
+        } else { // password confirmed mismatched
+
         }
     }
 })

@@ -4,12 +4,13 @@ angular.module('starter.services', [])
     return {
         change: function (pw, taxiid) {
             return $http.post(MAIN_URL+"/changePassword.php", {
-                    id: taxiid,
+                    taxiid: taxiid,
                     password: pw
                 }).then(function(response) {
                     return response.data;
                 });
         }
+    }
 })
 
 .factory('LoginService', function($q, $http) {
