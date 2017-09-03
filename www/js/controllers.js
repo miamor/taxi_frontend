@@ -433,12 +433,22 @@ angular.module('starter.controllers', [])
             if (data == -1) {
                 var alertPopup = $ionicPopup.alert({
                     title: 'Lỗi!',
-                    template: 'Tên đăng nhập hoặc mật khẩu không đúng!'
+                    template: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+                    scope: $scope,
+                    buttons: [{
+                          text: 'Đóng',
+                          type: 'button-assertive'
+                    }]
                 });
             } else if (data == 0) {
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Lỗi hệ thống!',
-                    template: ''
+                    title: 'Lỗi!',
+                    template: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+                    scope: $scope,
+                    buttons: [{
+                          text: 'Đóng',
+                          type: 'button-assertive'
+                    }]
                 });
             } else {
                 taxiData = data;
@@ -446,10 +456,6 @@ angular.module('starter.controllers', [])
                 document.getElementsByTagName("coin")[0].innerHTML = taxiData.coin+"k";
 
                 navIcons = document.getElementsByClassName("ion-navicon");
-                console.log('~~~');
-                console.log(navIcons);
-                console.log(navIcons[0]);
-                console.log('~~~');
                 for (i = 0; i < navIcons.length; i++) navIcons[i].classList.remove("ng-hide");
 
                 $state.go('tab.trips');
@@ -466,17 +472,54 @@ angular.module('starter.controllers', [])
         console.log($scope.data.confirmpassword);
         if ($scope.data.password == $scope.data.confirmpassword) {
             PasswordService.change($scope.data.password, taxiData.id).then(function(data) {
-                console.log(data);
+                //console.log(data);
                 if (data == 0) { // system error
-
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Lỗi!',
+                        template: 'Lỗi hệ thống!',
+                        scope: $scope,
+                        buttons: [{
+                              text: 'Đóng',
+                              type: 'button-assertive'
+                        }]
+                    });
                 } else if (data == -1) { // missing fields
-
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Lỗi!',
+                        template: 'Xác nhận mật khẩu không trùng khớp!',
+                        scope: $scope,
+                        buttons: [{
+                              text: 'Đóng',
+                              type: 'button-assertive'
+                        }]
+                    });
                 } else {
                     newPassword = data.newPassword;
+                    var successAlertPopup = $ionicPopup.alert({
+                        title: 'Thành công!',
+                        template: 'Mật khẩu đổi thành công!',
+                        scope: $scope,
+                        buttons: [{
+                              text: 'Đóng',
+                              type: 'button-assertive'
+                        }]
+                    });
+                    successAlertPopup.then(function(res) {
+                        console.log('Closed!', res);
+                        $state.go('tab.trips');
+                    });
                 }
             })
         } else { // password confirmed mismatched
-
+            var alertPopup = $ionicPopup.alert({
+                title: 'Lỗi!',
+                template: 'Xác nhận mật khẩu không trùng khớp!',
+                scope: $scope,
+                buttons: [{
+                      text: 'Đóng',
+                      type: 'button-assertive'
+                }]
+            });
         }
     }
 })
