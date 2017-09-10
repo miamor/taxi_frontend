@@ -27,7 +27,7 @@ h3.trip-destinations{font-size:14px!important;margin:8px 0 10px!important}
 .trip-info{margin-bottom:5px;font-size:14px}
 .trip-time{font-weight:600;color:#bc5004;margin-right:30px}
 .trip-seat{*margin-left:30px;font-weight:600;color:#a44abc}
-.trip-title{font-size:14px!important} 
+.trip-title{font-size:14px!important}
 .center{text-align:center}
 .trip-buy{margin-top:20px}
 .trip-coin{font-weight:600;margin-left:30px}
@@ -61,7 +61,7 @@ ion-list .list ion-item:first-child .item-content{padding-right:10px!important}
 .back-button:not(.hide)+.buttons.buttons-left{display:none!important}
 .list-myPriority .item{background:#f9eaea;border-top:1px solid #fadada!important;position:relative;}
 .list-myPriority .item:after{content:'[ƯU TIÊN]';position:absolute;top:15px;right:10px;font-size:11px}
-
+.refresh-button{position: absolute;right:0;float:right;z-index:1000;cursor:pointer}
 
 /*-===========================ion-tabs ======================================-*/
 ion-tabs .tab-item {

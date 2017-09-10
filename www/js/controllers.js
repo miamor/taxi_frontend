@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicSideMenuDelegate, $state, $ionicHistory, $rootScope, $timeout, $ionicLoading) {
+.controller('AppCtrl', function($scope, $ionicSideMenuDelegate, $state, $ionicHistory, $rootScope, $timeout, $ionicLoading, $location) {
     // Code you want executed every time view is opened
 //    $scope.taxiData = taxiData = {};
 //    $scope.$on('$ionicView.enter', function () {
@@ -20,7 +20,21 @@ angular.module('starter.controllers', [])
             return false;
         } else {
             for (i = 0; i < navIcons.length; i++) navIcons[i].classList.remove("ng-hide");
+            $scope.reload = function() {
+                // Your refresh code
+                $rootScope.$emit('refreshedPressed');
+            }
         }
+
+        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            if ($location.path() == "/tab/trips") {
+                cls = document.getElementsByClassName("reloadbutton");
+                for (i = 0; i < cls.length; i++) cls[i].classList.remove("ng-hide");
+            } else {
+                cls = document.getElementsByClassName("reloadbutton");
+                for (i = 0; i < cls.length; i++) cls[i].classList.add("ng-hide");
+            }
+        });
 
 //    }, 1000);
 
@@ -166,7 +180,7 @@ angular.module('starter.controllers', [])
     })
 })
 
-.controller('TripsCtrl', function($scope, $state, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading, $location) {
+.controller('TripsCtrl', function($scope, $state, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading, $location, $rootScope) {
     $ionicNavBarDelegate.showBackButton(false);
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
 
@@ -205,10 +219,12 @@ angular.module('starter.controllers', [])
     }
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-    	console.log(fromState);
-        console.log(toState);
     	if ($location.path() == "/tab/trips") {
-    		$scope.refreshItems();
+            $rootScope.$on('refreshedPressed', function() {
+                console.log('reload');
+                $scope.refreshItems();
+            });
+            $scope.refreshItems();
         }
     });
 
@@ -428,6 +444,30 @@ angular.module('starter.controllers', [])
     $scope.data = {};
 
     $scope.login = function() {
+/*        var alertPopup = $ionicPopup.alert({
+            title: 'Clicked!',
+            template: 'hiu~',
+            scope: $scope,
+            buttons: [{
+                  text: 'Đóng',
+                  type: 'button-assertive'
+            }]
+        });
+        $http.post(MAIN_URL+"/login.php", {
+                username: name,
+                password: pw
+            }).success(function(response) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Success',
+                    template: 'Success'
+                });
+            }).error(function(response) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Lỗi',
+                    template: 'Lỗi~'
+                });
+            });
+*/
         LoginService.loginUser($scope.data.username, $scope.data.password).then(function(data) {
             console.log(data);
             if (data == -1) {
@@ -452,6 +492,7 @@ angular.module('starter.controllers', [])
                 });
             } else {
                 taxiData = data;
+
                 document.getElementsByTagName("info")[0].innerHTML = taxiData.name;
                 document.getElementsByTagName("coin")[0].innerHTML = taxiData.coin+"k";
 
