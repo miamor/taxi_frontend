@@ -66,6 +66,13 @@ angular.module('starter.services', [])
         			return trips;
         		});
     },
+    countAll: function (taxiid) {
+      return $http.post(MAIN_URL+"/trip_count_all.php", {taxiid: taxiid})
+                .then(function(response) {
+        			trips_num = response.data;
+        			return trips_num;
+        		});
+    },
     getOne: function(tripID) {
         return $http.post(MAIN_URL+"/trip_one.php", {id: tripID})
                   .then(function(response) {

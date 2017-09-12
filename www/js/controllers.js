@@ -218,12 +218,29 @@ angular.module('starter.controllers', [])
         }
     }
 
+    $scope.check = function () {
+        TripsService.countAll(taxiData.id).then(function(num) {
+            var trips_num = window.localStorage.getItem('trips_num');
+            console.log(num+' ~ '+trips_num);
+            if (num != trips_num) $scope.refreshItems();
+        })
+    }
+
+    $scope.theInterval = null;
+
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     	if ($location.path() == "/tab/trips") {
             $rootScope.$on('refreshedPressed', function() {
                 console.log('reload');
                 $scope.refreshItems();
             });
+            $scope.theInterval = $interval(function(){
+                $scope.check();
+            }.bind(this), 1000);
+            $scope.$on('$destroy', function () {
+                $interval.cancel($scope.theInterval)
+            });
+
             $scope.refreshItems();
         }
     });
@@ -240,6 +257,9 @@ angular.module('starter.controllers', [])
 
             TripsService.getAll(taxiData.id).then(function(response) {
                 console.log(response);
+                var trips_num = response.total;
+                window.localStorage.setItem('trips_num', trips_num);
+
                 $scope.trips_myPriority = response.myPriority;
                 $scope.trips_today = response.today;
                 $scope.trips_others = response.others;
