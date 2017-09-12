@@ -319,16 +319,16 @@ angular.module('starter.controllers', [])
 
         if (diff_sec <= 0) {
             document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left passed">Hết hạn</span>';
-            document.getElementsByTagName("button")[4].classList.add('ng-hide');
+            document.getElementById("buyTrip").classList.add('ng-hide');
         } else {
             var diff = this.msToTime(diff_sec);
             document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left">'+diff+'</span>';
-            document.getElementsByTagName("button")[4].classList.remove('ng-hide');
+            document.getElementById("buyTrip").classList.remove('ng-hide');
         }
     }
 
     $scope.showInfo = function (response) {
-        var button = document.getElementsByTagName("button")[4];
+        var button = document.getElementById("buyTrip");
         button.classList.add("disabled");
         button.innerHTML = "Đã mua";
         document.getElementsByTagName("more")[0].classList.remove("ng-hide");
