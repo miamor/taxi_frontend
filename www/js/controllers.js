@@ -338,7 +338,7 @@ angular.module('starter.controllers', [])
         document.getElementsByTagName("to")[0].innerHTML = response.addressto_full;
         document.getElementsByTagName("name")[0].innerHTML = response.name;
         document.getElementsByTagName("detailss")[0].innerHTML = response.details;
-        document.getElementsByTagName("phone")[0].innerHTML = response.phone;
+        document.getElementsByTagName("phone")[0].innerHTML = <<a href="tel:+response.phone">response.phone</a>;
         document.getElementsByTagName("phone")[0].classList.remove("ng-hide");
         var timeEle = document.getElementsByTagName("timev")[0];
         timeEle.parentNode.removeChild(timeEle);
