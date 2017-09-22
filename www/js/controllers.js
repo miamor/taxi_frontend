@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
 //    $scope.taxiData = taxiData = {};
 //    $scope.$on('$ionicView.enter', function () {
 //    $timeout(function () {
-        $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+        $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 //        console.log(taxiData);
         navIcons = document.getElementsByTagName("button");
         console.log(navIcons);
@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
 
 .controller('HistoryCtrl', function($scope, $state, HistoryService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading) {
     $ionicNavBarDelegate.showBackButton(false);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -68,7 +68,7 @@ angular.module('starter.controllers', [])
 })
 .controller('HistoryViewCtrl', function($scope, $state, $stateParams, HistoryService, $ionicPopup, $interval, $ionicNavBarDelegate, $ionicLoading, $timeout) {
     $ionicNavBarDelegate.showBackButton(true);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -88,7 +88,7 @@ angular.module('starter.controllers', [])
 
 .controller('InfriengeCtrl', function($scope, $state, InfriengeService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading) {
     $ionicNavBarDelegate.showBackButton(false);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -110,7 +110,7 @@ angular.module('starter.controllers', [])
 })
 .controller('InfriengeViewCtrl', function($scope, $state, $stateParams, InfriengeService, $ionicPopup, $interval, $ionicNavBarDelegate, $ionicLoading, $timeout) {
     $ionicNavBarDelegate.showBackButton(true);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -129,7 +129,7 @@ angular.module('starter.controllers', [])
 
 .controller('BuyCtrl', function($scope, $state, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading, $location) {
     $ionicNavBarDelegate.showBackButton(false);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $scope.refreshItems = function () {
         if (taxiData) {
@@ -159,7 +159,7 @@ angular.module('starter.controllers', [])
 })
 .controller('BuyViewCtrl', function($scope, $state, $stateParams, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading) {
     $ionicNavBarDelegate.showBackButton(true);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -182,7 +182,7 @@ angular.module('starter.controllers', [])
 
 .controller('TripsCtrl', function($scope, $state, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading, $location, $rootScope) {
     $ionicNavBarDelegate.showBackButton(false);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $scope.loadTimeLeft = function(response, from) {
         for (i = 0; i < response.length; i++) {
@@ -285,7 +285,7 @@ angular.module('starter.controllers', [])
 })
 .controller('TripsViewCtrl', function($scope, $state, $stateParams, TripsService, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading) {
     $ionicNavBarDelegate.showBackButton(true);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $ionicLoading.show({
         content: 'Loading',
@@ -364,6 +364,9 @@ angular.module('starter.controllers', [])
                 if (parseInt(response.status) == 1) { // taken
                     button.classList.add("disabled");
                     button.innerHTML = "Chuyến đã được mua";
+                } else if (pricebuy > parseInt(taxiData.coin)) { // taken
+                    button.classList.add("disabled");
+                    button.innerHTML = "Bạn không đủ tiền";
                 } else {
                     var end_time = new Date(response.time);
                     var now = new Date();
@@ -451,7 +454,7 @@ angular.module('starter.controllers', [])
 
 
 .controller('LogoutCtrl', function($scope, $ionicPopup, $state) {
-    window.localStorage.removeItem("session");
+    window.localStorage.removeItem("session_taxi");
     taxiData = null;
     navIcons = document.getElementsByClassName("ion-navicon");
     for (i = 0; i < navIcons.length; i++) navIcons[i].classList.add("ng-hide");
@@ -527,7 +530,7 @@ angular.module('starter.controllers', [])
 
 .controller('PasswordCtrl', function($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicNavBarDelegate, $ionicLoading, PasswordService) {
     $scope.data = {};
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
     $scope.changePassword = function() {
         console.log($scope.data.password);
         console.log($scope.data.confirmpassword);
@@ -587,7 +590,7 @@ angular.module('starter.controllers', [])
 
 .controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, $interval, $timeout, $ionicNavBarDelegate, $ionicLoading) {
     $ionicNavBarDelegate.showBackButton(false);
-    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session"));
+    $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     if (taxiData) {
         $ionicLoading.show({

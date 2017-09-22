@@ -15,6 +15,7 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+.ion-navicon.disabled{display: none!important}
 ion-nav-view *{font-size:14px;*color:#404d97;font-family:"-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif}
 time{font-size:14px!important;margin-right:30px!important}
 .time_left{color:#00a65a;font-weight:600;*font-size:13px}

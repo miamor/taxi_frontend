@@ -28,7 +28,7 @@ angular.module('starter.services', [])
                     password: pw
                 }).then(function(response) {
                     //console.log(response);
-                    window.localStorage.setItem('session', JSON.stringify(response.data));
+                    window.localStorage.setItem("session_taxi", JSON.stringify(response.data));
                     return response.data;
                 });
 /*            var deferred = $q.defer();
