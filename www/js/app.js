@@ -168,6 +168,16 @@ angular.module('starter', ['ionic', 'chart.js', 'starter.controllers', 'starter.
 		}
 	})
 
+	.state('tab.info', {
+		url: '/info',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/tab-info.html',
+			}
+		}
+	})
+  
+  
 	.state('tab.password', {
 		url: '/password',
 		views: {
