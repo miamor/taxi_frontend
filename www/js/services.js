@@ -15,13 +15,6 @@ angular.module('starter.services', [])
 
 .factory('LoginService', function($q, $http) {
     return {
-/*        checkLogin: function() {
-            return $http.get(MAIN_URL+"/login_check.php").then(function(response) {
-                //    console.log(response);
-                    return response.data;
-                });
-        }
-*/
         loginUser: function(name, pw) {
             return $http.post(MAIN_URL+"/login.php", {
                     username: name,
@@ -31,23 +24,21 @@ angular.module('starter.services', [])
                     window.localStorage.setItem("session_taxi", JSON.stringify(response.data));
                     return response.data;
                 });
-/*            var deferred = $q.defer();
-            var promise = deferred.promise;
-            if (name == 'user' && pw == 'secret') {
-                deferred.resolve('Welcome ' + name + '!');
-            } else {
-                deferred.reject('Wrong credentials.');
-            }
-            promise.success = function(fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function(fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-            return promise;*/
         }
+    }
+})
+
+.factory('AccountService', function($http) {
+    return {
+        getTaxiData: function(taxiid) {
+            return $http.post(MAIN_URL+"/getTaxiData.php", {id: taxiid}).then(function(response) {
+                //console.log(response);
+                if (response.data != -1) {
+                    window.localStorage.setItem("session_taxi", JSON.stringify(response.data));
+                }
+                return response.data;
+            });
+      }
     }
 })
 

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicSideMenuDelegate, $state, $ionicHistory, $rootScope, $timeout, $ionicLoading, $location) {
+.controller('AppCtrl', function($scope, $ionicSideMenuDelegate, $state, $ionicHistory, $rootScope, $timeout, $ionicLoading, $location, $interval, AccountService) {
     // Code you want executed every time view is opened
 //    $scope.taxiData = taxiData = {};
 //    $scope.$on('$ionicView.enter', function () {
@@ -12,6 +12,7 @@ angular.module('starter.controllers', [])
         //console.log(navIcons[0]);
         //console.log('dddddd')
 
+        $scope.theIntervalCheckAccount = null;
         if (!taxiData) {
             $ionicLoading.hide();
             navIcons = document.getElementsByClassName("ion-navicon");
@@ -24,6 +25,11 @@ angular.module('starter.controllers', [])
                 // Your refresh code
                 $rootScope.$emit('refreshedPressed');
             }
+
+            $scope.theIntervalCheckAccount = $interval(function(){
+                AccountService.getTaxiData(taxiData.id);
+            }.bind(this), 1000);
+
         }
 
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
@@ -235,7 +241,7 @@ angular.module('starter.controllers', [])
     $scope.theIntervalCheck = null;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-    	if ($location.path() == "/tab/trips") {
+    	if (taxiData && $location.path() == "/tab/trips") {
             $rootScope.$on('refreshedPressed', function() {
                 //console.log('reload');
                 $scope.refreshItems();
@@ -436,6 +442,7 @@ angular.module('starter.controllers', [])
                 //console.log(response);
                 if (response == 1) {
                     newCoin = taxiData.coin = taxiData.coin - $scope.trip.coin;
+                    window.localStorage.setItem("session_taxi", taxiData);
                     document.getElementsByTagName("coin")[0].innerHTML = newCoin+"k";
                     $scope.showInfo($scope.trip);
                     $interval.cancel($scope.theInterval);
