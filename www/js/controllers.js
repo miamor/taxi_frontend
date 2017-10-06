@@ -6,11 +6,11 @@ angular.module('starter.controllers', [])
 //    $scope.$on('$ionicView.enter', function () {
 //    $timeout(function () {
         $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
-//        console.log(taxiData);
+//        //console.log(taxiData);
         navIcons = document.getElementsByTagName("button");
-        console.log(navIcons);
-        console.log(navIcons[0]);
-        console.log('dddddd')
+        //console.log(navIcons);
+        //console.log(navIcons[0]);
+        //console.log('dddddd')
 
         if (!taxiData) {
             $ionicLoading.hide();
@@ -141,7 +141,7 @@ angular.module('starter.controllers', [])
                 showDelay: 0
             });
             TripsService.getAllBuy(taxiData.id).then(function(response) {
-                console.log(response);
+                //console.log(response);
                 $scope.trips_today = response.today;
                 $scope.trips_others = response.others;
 
@@ -172,7 +172,7 @@ angular.module('starter.controllers', [])
     $scope.tripID = $stateParams.tripID;
     $scope.trip = {};
 
-    TripsService.getOne($scope.tripID).then(function(response) {
+    TripsService.getOne($scope.tripID, taxiData.id).then(function(response) {
         $timeout(function() {
             $scope.trip = response;
             $ionicLoading.hide();
@@ -194,6 +194,10 @@ angular.module('starter.controllers', [])
             var time_left = moment(end_time, "YYYYMMDD H:i:s").startOf('hour').fromNow();
 
             if (parseInt(response[i].coin) <= 0) {
+                //console.log(response[i]);
+                //console.log(document.getElementsByTagName("buy"));
+                //console.log(document.getElementsByTagName("buy")[j]);
+                //console.log(j);
                 document.getElementsByTagName("buy")[j].innerHTML = "Chưa có giá";
                 document.getElementsByTagName("pricebuy")[j].innerHTML = "";
             } else {
@@ -205,6 +209,8 @@ angular.module('starter.controllers', [])
                     document.getElementsByTagName("buy")[j].innerHTML = "Đã mua";
                 } else if (parseInt(response[i].status) == 1) {
                     document.getElementsByTagName("buy")[j].innerHTML = "Đã được mua";
+                } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
+                    document.getElementsByTagName("buy")[j].innerHTML = "Bạn không đủ tiền";
                 } else if (diff_sec <= 0) {
                     document.getElementsByTagName("buy")[j].innerHTML = "Hết hạn";
                 } else if (parseInt(response[i].seat) > parseInt(taxiData.seat)) {
@@ -221,24 +227,24 @@ angular.module('starter.controllers', [])
     $scope.check = function () {
         TripsService.countAll(taxiData.id).then(function(num) {
             var trips_num = window.localStorage.getItem('trips_num');
-            console.log(num+' ~ '+trips_num);
+            ////console.log(num+' ~ '+trips_num);
             if (num != trips_num) $scope.refreshItems();
         })
     }
 
-    $scope.theInterval = null;
+    $scope.theIntervalCheck = null;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     	if ($location.path() == "/tab/trips") {
             $rootScope.$on('refreshedPressed', function() {
-                console.log('reload');
+                //console.log('reload');
                 $scope.refreshItems();
             });
-            $scope.theInterval = $interval(function(){
+            $scope.theIntervalCheck = $interval(function(){
                 $scope.check();
             }.bind(this), 1000);
             $scope.$on('$destroy', function () {
-                $interval.cancel($scope.theInterval)
+                $interval.cancel($scope.theIntervalCheck)
             });
 
             $scope.refreshItems();
@@ -256,7 +262,7 @@ angular.module('starter.controllers', [])
             });
 
             TripsService.getAll(taxiData.id).then(function(response) {
-                console.log(response);
+                //console.log(response);
                 var trips_num = response.total;
                 window.localStorage.setItem('trips_num', trips_num);
 
@@ -266,8 +272,8 @@ angular.module('starter.controllers', [])
 
                 $timeout(function() {
                     $scope.loadTimeLeft(response.myPriority, 0);
-                    $scope.loadTimeLeft(response.today, response.myPriority.length);
-                    $scope.loadTimeLeft(response.others, response.today.length+response.myPriority.length);
+                    $scope.loadTimeLeft(response.today, response.myPriority.length  +1);
+                    $scope.loadTimeLeft(response.others, response.today.length+response.myPriority.length  +1);
                 }, 100);
 
                 $ionicLoading.hide();
@@ -319,54 +325,70 @@ angular.module('starter.controllers', [])
 
         if (diff_sec <= 0) {
             document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left passed">Hết hạn</span>';
-            document.getElementById("buyTrip").classList.add('ng-hide');
+            //document.getElementById("buyTrip").classList.add('ng-hide');
         } else {
             var diff = this.msToTime(diff_sec);
             document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left">'+diff+'</span>';
-            document.getElementById("buyTrip").classList.remove('ng-hide');
+            //document.getElementById("buyTrip").classList.remove('ng-hide');
         }
     }
 
-    $scope.showInfo = function (response) {
+    $scope.showInfo = function (response, isBuyCallback = true) {
         var button = document.getElementById("buyTrip");
         button.classList.add("disabled");
         button.innerHTML = "Đã mua";
         document.getElementsByTagName("more")[0].classList.remove("ng-hide");
         document.getElementsByTagName("pnr")[0].innerHTML = response.PNR;
         document.getElementsByTagName("price")[0].innerHTML = response.price;
-        document.getElementsByTagName("from")[0].innerHTML = response.addressfrom_full;
-        document.getElementsByTagName("to")[0].innerHTML = response.addressto_full;
+
+        if (isBuyCallback) {
+            TripsService.getFullInfo(response.id, taxiData.id).then(function(response_adr) {
+                document.getElementsByTagName("from")[0].innerHTML = response_adr.addressfrom_full;
+                document.getElementsByTagName("to")[0].innerHTML = response_adr.addressto_full;
+                document.getElementsByTagName("phone")[0].innerHTML = response_adr.phone;
+                document.getElementsByTagName("phone")[0].classList.remove("ng-hide");
+            });
+        } else {
+            document.getElementsByTagName("from")[0].innerHTML = response.addressfrom_full;
+            document.getElementsByTagName("to")[0].innerHTML = response.addressto_full;
+            document.getElementsByTagName("phone")[0].innerHTML = response.phone;
+            document.getElementsByTagName("phone")[0].classList.remove("ng-hide");
+        }
+
         document.getElementsByTagName("name")[0].innerHTML = response.name;
         document.getElementsByTagName("detailss")[0].innerHTML = response.details;
-        document.getElementsByTagName("phone")[0].innerHTML = response.phone;
-        document.getElementsByTagName("phone")[0].classList.remove("ng-hide");
         var timeEle = document.getElementsByTagName("timev")[0];
         timeEle.parentNode.removeChild(timeEle);
         button.removeAttribute("ng-click");
     }
 
     $scope.theInterval = null;
+    $scope.thisTrip = null;
 
     $scope.checkBuy = function (response) {
-        var button = document.getElementsByTagName("button")[4];
+        $scope.thisTrip = response;
+        var button = document.getElementById("buyTrip");
 
         if (parseInt(response.coin) <= 0) {
             button.classList.add("disabled");
             button.innerHTML = "Chuyến không có sẵn";
+            button.removeAttribute("ng-click");
             document.getElementsByTagName("pricebuyv")[0].innerHTML = "";
         } else {
             var pricebuy = parseInt(response.price)-parseInt(response.coin);
             document.getElementsByTagName("pricebuyv")[0].innerHTML = 'Giá mua ngay: <b class="trip-coin-view">'+pricebuy+'k</b>';
 
             if (response.taxiid == taxiData.id) {
-                $scope.showInfo(response);
+                $scope.showInfo(response, false);
             } else {
                 if (parseInt(response.status) == 1) { // taken
                     button.classList.add("disabled");
                     button.innerHTML = "Chuyến đã được mua";
-                } else if (pricebuy > parseInt(taxiData.coin)) { // taken
+                    button.removeAttribute("ng-click");
+                } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
                     button.classList.add("disabled");
                     button.innerHTML = "Bạn không đủ tiền";
+                    button.removeAttribute("ng-click");
                 } else {
                     var end_time = new Date(response.time);
                     var now = new Date();
@@ -381,6 +403,11 @@ angular.module('starter.controllers', [])
                         button.innerHTML = "Xe bạn không đủ chỗ";
                         button.removeAttribute("ng-click");
                     } else {
+                        //$scope.loadTimeLeft(response);
+                        ////console.log('can buy');
+                        //var divBtn = document.getElementById("trip_buy_button");
+                        //divBtn.innerHTML = '<button ng-click="buy('+response.id+'}})" id="buyTrip" class="button button-assertive ng-hide">Mua chuyến</button>';
+                        //button.setAttribute('ng-click', 'buy('+response.id+')');
                         $scope.theInterval = $interval(function(){
                             $scope.loadTimeLeft(response);
                         }.bind(this), 1000);
@@ -397,43 +424,76 @@ angular.module('starter.controllers', [])
     }
 
     $scope.buy = function(tripID) {
-        TripsService.buy($scope.tripID, taxiData.id).then(function(response) {
-            console.log(response);
-            if (response == 1) {
-                newCoin = taxiData.coin = taxiData.coin - $scope.trip.coin;
-                document.getElementsByTagName("coin")[0].innerHTML = newCoin+"k";
-                $scope.showInfo($scope.trip);
-                $interval.cancel($scope.theInterval);
-            } else {
-                if (response == -1) {
-                    errorInfo = "Bạn không đủ tiền để mua chuyến này";
-                } else if (response == -2) {
-                    errorInfo = "Lỗi không tìm thấy chuyến. Bạn vui lòng thử tải lại trang...";
-                } else if (response == -3) {
-                    errorInfo = "Chuyến này đã được mua hoặc không tồn tại";
-                }
-                var alertPopup = $ionicPopup.show({
-                  template: errorInfo,
-                  title: 'Lỗi',
-                  scope: $scope,
-                  buttons: [
-                    {
-                        text: 'Đóng',
-                        type: 'button-assertive'
+        var pricebuy = parseInt($scope.thisTrip.price)-parseInt($scope.thisTrip.coin);
+        var end_time = new Date($scope.thisTrip.time);
+        var now = new Date();
+        var diff_sec = end_time - now;
+        console.log($scope.thisTrip);
+        console.log(parseInt($scope.thisTrip.coin) > 0 && parseInt($scope.thisTrip.status) == 0 && pricebuy <= parseInt(taxiData.coin) && parseInt($scope.thisTrip.seat) <= parseInt(taxiData.seat) && diff_sec > 0);
+
+        if (parseInt($scope.thisTrip.coin) > 0 && parseInt($scope.thisTrip.status) == 0 && pricebuy <= parseInt(taxiData.coin) && parseInt($scope.thisTrip.seat) <= parseInt(taxiData.seat) && diff_sec > 0 ) {
+            TripsService.buy($scope.tripID, taxiData.id).then(function(response) {
+                //console.log(response);
+                if (response == 1) {
+                    newCoin = taxiData.coin = taxiData.coin - $scope.trip.coin;
+                    document.getElementsByTagName("coin")[0].innerHTML = newCoin+"k";
+                    $scope.showInfo($scope.trip);
+                    $interval.cancel($scope.theInterval);
+                } else {
+                    if (response == -1) {
+                        errorInfo = "Bạn không đủ tiền để mua chuyến này";
+                    } else if (response == -2) {
+                        errorInfo = "Lỗi không tìm thấy chuyến. Bạn vui lòng thử tải lại trang...";
+                    } else if (response == -3) {
+                        errorInfo = "Chuyến này đã được mua hoặc không tồn tại";
                     }
-                  ]
-                });
-                alertPopup.then(function(res) {
-                  console.log('Closed!', res);
-                });
+                    var alertPopup = $ionicPopup.show({
+                      template: errorInfo,
+                      title: 'Lỗi',
+                      scope: $scope,
+                      buttons: [
+                        {
+                            text: 'Đóng',
+                            type: 'button-assertive'
+                        }
+                      ]
+                    });
+                    alertPopup.then(function(res) {
+                      //console.log('Closed!', res);
+                    });
+                }
+            })
+        } else {
+            if (parseInt($scope.thisTrip.coin) <= 0) {
+                errorInfo = "Chuyến không có sẵn";
+            } else if (status == 1) {
+                errorInfo = "Chuyến này đã được mua hoặc không tồn tại";
+            } else if (pricebuy > parseInt(taxiData.coin)) {
+                errorInfo = "Bạn không đủ tiền để mua chuyến này";
+            } else if (parseInt($scope.thisTrip.seat) > parseInt(taxiData.seat)) {
+                errorInfo = "Xe bạn không đủ chỗ";
+            } else if (diff_sec <= 0) {
+                errorInfo = "Chuyến đã hết hạn";
             }
-        })
+            var alertPopup = $ionicPopup.show({
+              template: errorInfo,
+              title: 'Lỗi',
+              scope: $scope,
+              buttons: [
+                {
+                    text: 'Đóng',
+                    type: 'button-assertive'
+                }
+              ]
+            });
+            alertPopup.then(function(res) {
+              //console.log('Closed!', res);
+            });
+        }
     }
 
-    TripsService.getOne($scope.tripID).then(function(response) {
+    TripsService.getOne($scope.tripID, taxiData.id).then(function(response) {
         $timeout(function() {
-            console.log(response);
-            console.log('~~~');
             $scope.trip = response;
 
             $scope.checkBuy(response);
@@ -492,7 +552,7 @@ angular.module('starter.controllers', [])
             });
 */
         LoginService.loginUser($scope.data.username, $scope.data.password).then(function(data) {
-            console.log(data);
+            //console.log(data);
             if (data == -1) {
                 var alertPopup = $ionicPopup.alert({
                     title: 'Lỗi!',
@@ -532,11 +592,11 @@ angular.module('starter.controllers', [])
     $scope.data = {};
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
     $scope.changePassword = function() {
-        console.log($scope.data.password);
-        console.log($scope.data.confirmpassword);
+        //console.log($scope.data.password);
+        //console.log($scope.data.confirmpassword);
         if ($scope.data.password == $scope.data.confirmpassword) {
             PasswordService.change($scope.data.password, taxiData.id).then(function(data) {
-                //console.log(data);
+                ////console.log(data);
                 if (data == 0) { // system error
                     var alertPopup = $ionicPopup.alert({
                         title: 'Lỗi!',
@@ -569,7 +629,7 @@ angular.module('starter.controllers', [])
                         }]
                     });
                     successAlertPopup.then(function(res) {
-                        console.log('Closed!', res);
+                        //console.log('Closed!', res);
                         $state.go('tab.trips');
                     });
                 }
@@ -601,7 +661,7 @@ angular.module('starter.controllers', [])
             showDelay: 0
         });
         $timeout(function() {
-            console.log(taxiData);
+            //console.log(taxiData);
             $scope.account = taxiData;
             $ionicLoading.hide();
         }, 1000);

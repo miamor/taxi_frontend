@@ -73,11 +73,17 @@ angular.module('starter.services', [])
         			return trips_num;
         		});
     },
-    getOne: function(tripID) {
-        return $http.post(MAIN_URL+"/trip_one.php", {id: tripID})
+    getOne: function(tripID, taxiid) {
+        return $http.post(MAIN_URL+"/trip_one.php", {id: tripID, taxiid: taxiid})
                   .then(function(response) {
           			trip = response.data;
           			return trip;
+          		});
+    },
+    getFullInfo: function(tripID, taxiid) {
+        return $http.post(MAIN_URL+"/trip_one_address.php", {id: tripID, taxiid: taxiid})
+                  .then(function(response) {
+          			return response.data;
           		});
     },
     buy: function(tripID, taxiid) {
