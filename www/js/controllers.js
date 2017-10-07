@@ -191,42 +191,44 @@ angular.module('starter.controllers', [])
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
     $scope.loadTimeLeft = function(response, from) {
-        for (i = 0; i < response.length; i++) {
-            var j = i + from;
+        if (taxiData) {
+            for (i = 0; i < response.length; i++) {
+                var j = i + from;
 
-            var end_time = new Date(response[i].time);
-            var now = new Date();
-            var diff_sec = end_time - now;
-            var time_left = moment(end_time, "YYYYMMDD H:i:s").startOf('hour').fromNow();
+                var end_time = new Date(response[i].time);
+                var now = new Date();
+                var diff_sec = end_time - now;
+                var time_left = moment(end_time, "YYYYMMDD H:i:s").startOf('hour').fromNow();
 
-            if (parseInt(response[i].coin) <= 0) {
-                //console.log(response[i]);
-                //console.log(document.getElementsByTagName("buy"));
-                //console.log(document.getElementsByTagName("buy")[j]);
-                //console.log(j);
-                document.getElementsByTagName("buy")[j].innerHTML = "Chưa có giá";
-                document.getElementsByTagName("pricebuy")[j].innerHTML = "";
-            } else {
-                var pricebuy = parseInt(response[i].price)-parseInt(response[i].coin);
-                document.getElementsByTagName("pricebuy")[j].innerHTML = pricebuy+'<span class="small">k</span>';
-
-                if (parseInt(response[i].taxiid) == parseInt(taxiData.id)) {
-                    document.getElementsByTagName("buy")[j].classList.add("my");
-                    document.getElementsByTagName("buy")[j].innerHTML = "Đã mua";
-                } else if (parseInt(response[i].status) == 1) {
-                    document.getElementsByTagName("buy")[j].innerHTML = "Đã được mua";
-                } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
-                    document.getElementsByTagName("buy")[j].innerHTML = "Bạn không đủ tiền";
-                } else if (diff_sec <= 0) {
-                    document.getElementsByTagName("buy")[j].innerHTML = "Hết hạn";
-                } else if (parseInt(response[i].seat) > parseInt(taxiData.seat)) {
-                    document.getElementsByTagName("buy")[j].innerHTML = "Xe bạn không đủ chỗ";
+                if (parseInt(response[i].coin) <= 0) {
+                    //console.log(response[i]);
+                    //console.log(document.getElementsByTagName("buy"));
+                    //console.log(document.getElementsByTagName("buy")[j]);
+                    //console.log(j);
+                    document.getElementsByTagName("buy")[j].innerHTML = "Chưa có giá";
+                    document.getElementsByTagName("pricebuy")[j].innerHTML = "";
                 } else {
-                    document.getElementsByTagName("time")[j].classList.remove('ng-hide');
-                    document.getElementsByTagName("time")[j].innerHTML = '<span class="time_left">'+time_left+'</span>';
-                }
-            }
+                    var pricebuy = parseInt(response[i].price)-parseInt(response[i].coin);
+                    document.getElementsByTagName("pricebuy")[j].innerHTML = pricebuy+'<span class="small">k</span>';
 
+                    if (parseInt(response[i].taxiid) == parseInt(taxiData.id)) {
+                        document.getElementsByTagName("buy")[j].classList.add("my");
+                        document.getElementsByTagName("buy")[j].innerHTML = "Đã mua";
+                    } else if (parseInt(response[i].status) == 1) {
+                        document.getElementsByTagName("buy")[j].innerHTML = "Đã được mua";
+                    } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
+                        document.getElementsByTagName("buy")[j].innerHTML = "Bạn không đủ tiền";
+                    } else if (diff_sec <= 0) {
+                        document.getElementsByTagName("buy")[j].innerHTML = "Hết hạn";
+                    } else if (parseInt(response[i].seat) > parseInt(taxiData.seat)) {
+                        document.getElementsByTagName("buy")[j].innerHTML = "Xe bạn không đủ chỗ";
+                    } else {
+                        document.getElementsByTagName("time")[j].classList.remove('ng-hide');
+                        document.getElementsByTagName("time")[j].innerHTML = '<span class="time_left">'+time_left+'</span>';
+                    }
+                }
+
+            }
         }
     }
 
