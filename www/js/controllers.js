@@ -280,8 +280,8 @@ angular.module('starter.controllers', [])
 
                 $timeout(function() {
                     $scope.loadTimeLeft(response.myPriority, 0);
-                    $scope.loadTimeLeft(response.today, response.myPriority.length  +1);
-                    $scope.loadTimeLeft(response.others, response.today.length+response.myPriority.length  +1);
+                    $scope.loadTimeLeft(response.today, response.myPriority.length);
+                    $scope.loadTimeLeft(response.others, response.today.length+response.myPriority.length);
                 }, 100);
 
                 $ionicLoading.hide();
