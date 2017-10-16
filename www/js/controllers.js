@@ -501,7 +501,6 @@ angular.module('starter.controllers', [])
     }
 
     TripsService.getOne($scope.tripID, taxiData.id).then(function(response) {
-        $timeout(function() {
             $scope.trip = response;
 
             $scope.checkBuy(response);
@@ -516,7 +515,8 @@ angular.module('starter.controllers', [])
             $scope.trip = response; //Assign data received to $scope.data
 
             $ionicLoading.hide();
-        }, 100);
+        /*$timeout(function() {
+        }, 100);*/
     });
 })
 
