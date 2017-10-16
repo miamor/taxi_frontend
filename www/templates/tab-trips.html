@@ -2,9 +2,7 @@
   <ion-content>
     <div class="list-myPriority">
       <a ng-click="view({{oneTrip.id}})" class="item item-remove-animate trip-item item-avatar" ng-repeat="oneTrip in trips_myPriority" type="item-text-wrap">
-        <pricebuy class="trip-pricecoin">
-
-        </pricebuy>
+        <pricebuy id="pricebuy_trip_{{oneTrip.id}}" class="trip-pricecoin"></pricebuy>
         <p class="animated fadeIn">
             <span class="trip-time">{{oneTrip.time}}</span>
         </p>
@@ -19,17 +17,15 @@
             <span class="trip-num_guess">{{oneTrip.num_guess}} khách</span>
             <span class="trip-is_round">{{oneTrip.is_round_txt}}</span>
         </div>
-        <time id="trip_{{oneTrip.id}}" class="ng-hide"></time>
-        <buy></buy>
+        <time id="time_trip_{{oneTrip.id}}" class="ng-hide"></time>
+        <buy id="buy_trip_{{oneTrip.id}}"></buy>
      </a>
     </div>
 
 
     <div class="list-today">
       <a ng-click="view({{oneTrip.id}})" class="item item-remove-animate trip-item item-avatar" ng-repeat="oneTrip in trips_today" type="item-text-wrap">
-        <pricebuy class="trip-pricecoin">
-
-        </pricebuy>
+        <pricebuy id="pricebuy_trip_{{oneTrip.id}}" class="trip-pricecoin"></pricebuy>
         <p class="animated fadeIn">
             <span class="trip-time">{{oneTrip.time}}</span>
         </p>
@@ -44,17 +40,15 @@
             <span class="trip-num_guess">{{oneTrip.num_guess}} khách</span>
             <span class="trip-is_round">{{oneTrip.is_round_txt}}</span>
         </div>
-        <time id="trip_{{oneTrip.id}}" class="ng-hide"></time>
-        <buy></buy>
+        <time id="time_trip_{{oneTrip.id}}" class="ng-hide"></time>
+        <buy id="buy_trip_{{oneTrip.id}}"></buy>
      </a>
     </div>
 
 
     <div class="list-others">
       <a ng-click="view({{oneTrip.id}})" class="item item-remove-animate trip-item item-avatar" ng-repeat="oneTrip in trips_others" type="item-text-wrap">
-        <pricebuy class="trip-pricecoin">
-
-        </pricebuy>
+        <pricebuy id="pricebuy_trip_{{oneTrip.id}}" class="trip-pricecoin"></pricebuy>
         <p class="animated fadeIn">
             <span class="trip-time">{{oneTrip.time}}</span>
         </p>
@@ -69,8 +63,8 @@
             <span class="trip-num_guess">{{oneTrip.num_guess}} khách</span>
             <span class="trip-is_round">{{oneTrip.is_round_txt}}</span>
         </div>
-        <time id="trip_{{oneTrip.id}}" class="ng-hide"></time>
-        <buy></buy>
+        <time id="time_trip_{{oneTrip.id}}" class="ng-hide"></time>
+        <buy id="buy_trip_{{oneTrip.id}}"></buy>
      </a>
     </div>
   </ion-content>

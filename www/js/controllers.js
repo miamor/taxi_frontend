@@ -190,10 +190,10 @@ angular.module('starter.controllers', [])
     $ionicNavBarDelegate.showBackButton(false);
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
-    $scope.loadTimeLeft = function(response, from) {
+    $scope.loadTimeLeft = function(response) {
         if (taxiData) {
             for (i = 0; i < response.length; i++) {
-                var j = i + from;
+                console.log(response[i]);
 
                 var end_time = new Date(response[i].time);
                 var now = new Date();
@@ -205,26 +205,26 @@ angular.module('starter.controllers', [])
                     //console.log(document.getElementsByTagName("buy"));
                     //console.log(document.getElementsByTagName("buy")[j]);
                     //console.log(j);
-                    document.getElementsByTagName("buy")[j].innerHTML = "Chưa có giá";
-                    document.getElementsByTagName("pricebuy")[j].innerHTML = "";
+                    document.getElementById("buy_trip_"+response[i].id).innerHTML = "Chưa có giá";
+                    document.getElementById("pricebuy_trip_"+response[i].id).innerHTML = "";
                 } else {
                     var pricebuy = parseInt(response[i].price)-parseInt(response[i].coin);
-                    document.getElementsByTagName("pricebuy")[j].innerHTML = pricebuy+'<span class="small">k</span>';
+                    document.getElementById("pricebuy_trip_"+response[i].id).innerHTML = pricebuy+'<span class="small">k</span>';
 
                     if (parseInt(response[i].taxiid) == parseInt(taxiData.id)) {
-                        document.getElementsByTagName("buy")[j].classList.add("my");
-                        document.getElementsByTagName("buy")[j].innerHTML = "Đã mua";
+                        document.getElementById("buy_trip_"+response[i].id).classList.add("my");
+                        document.getElementById("buy_trip_"+response[i].id).innerHTML = "Đã mua";
                     } else if (parseInt(response[i].status) == 1) {
-                        document.getElementsByTagName("buy")[j].innerHTML = "Đã được mua";
+                        document.getElementById("buy_trip_"+response[i].id).innerHTML = "Đã được mua";
                     } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
-                        document.getElementsByTagName("buy")[j].innerHTML = "Bạn không đủ tiền";
+                        document.getElementById("buy_trip_"+response[i].id).innerHTML = "Bạn không đủ tiền";
                     } else if (diff_sec <= 0) {
-                        document.getElementsByTagName("buy")[j].innerHTML = "Hết hạn";
+                        document.getElementById("buy_trip_"+response[i].id).innerHTML = "Hết hạn";
                     } else if (parseInt(response[i].seat) > parseInt(taxiData.seat)) {
-                        document.getElementsByTagName("buy")[j].innerHTML = "Xe bạn không đủ chỗ";
+                        document.getElementById("buy_trip_"+response[i].id).innerHTML = "Xe bạn không đủ chỗ";
                     } else {
-                        document.getElementsByTagName("time")[j].classList.remove('ng-hide');
-                        document.getElementsByTagName("time")[j].innerHTML = '<span class="time_left">'+time_left+'</span>';
+                        document.getElementById("time_trip_"+response[i].id).classList.remove('ng-hide');
+                        document.getElementById("time_trip_"+response[i].id).innerHTML = '<span class="time_left">'+time_left+'</span>';
                     }
                 }
 
@@ -277,11 +277,10 @@ angular.module('starter.controllers', [])
                 $scope.trips_myPriority = response.myPriority;
                 $scope.trips_today = response.today;
                 $scope.trips_others = response.others;
+                $scope.all_trips = $scope.trips_myPriority.concat($scope.trips_today).concat($scope.trips_others);
 
                 $timeout(function() {
-                    $scope.loadTimeLeft(response.myPriority, 0);
-                    $scope.loadTimeLeft(response.today, response.myPriority.length);
-                    $scope.loadTimeLeft(response.others, response.today.length+response.myPriority.length);
+                    $scope.loadTimeLeft($scope.all_trips);
                 }, 100);
 
                 $ionicLoading.hide();
