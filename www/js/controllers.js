@@ -193,7 +193,7 @@ angular.module('starter.controllers', [])
     $scope.loadTimeLeft = function(response) {
         if (taxiData) {
             for (i = 0; i < response.length; i++) {
-                console.log(response[i]);
+                //console.log(response[i]);
 
                 var end_time = new Date(response[i].time);
                 var now = new Date();
@@ -435,8 +435,8 @@ angular.module('starter.controllers', [])
         var end_time = new Date($scope.thisTrip.time);
         var now = new Date();
         var diff_sec = end_time - now;
-        console.log($scope.thisTrip);
-        console.log(parseInt($scope.thisTrip.coin) > 0 && parseInt($scope.thisTrip.status) == 0 && pricebuy <= parseInt(taxiData.coin) && parseInt($scope.thisTrip.seat) <= parseInt(taxiData.seat) && diff_sec > 0);
+        //console.log($scope.thisTrip);
+        //console.log(parseInt($scope.thisTrip.coin) > 0 && parseInt($scope.thisTrip.status) == 0 && pricebuy <= parseInt(taxiData.coin) && parseInt($scope.thisTrip.seat) <= parseInt(taxiData.seat) && diff_sec > 0);
 
         if (parseInt($scope.thisTrip.coin) > 0 && parseInt($scope.thisTrip.status) == 0 && pricebuy <= parseInt(taxiData.coin) && parseInt($scope.thisTrip.seat) <= parseInt(taxiData.seat) && diff_sec > 0 ) {
             TripsService.buy($scope.tripID, taxiData.id).then(function(response) {
