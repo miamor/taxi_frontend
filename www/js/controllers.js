@@ -300,14 +300,6 @@ angular.module('starter.controllers', [])
     $ionicNavBarDelegate.showBackButton(true);
     $scope.taxiData = taxiData = JSON.parse(window.localStorage.getItem("session_taxi"));
 
-    $ionicLoading.show({
-        content: 'Loading',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-    });
-
     $scope.tripID = $stateParams.tripID;
     $scope.trip = {};
 
@@ -331,18 +323,18 @@ angular.module('starter.controllers', [])
         var diff_sec = end_time - now;
 
         if (diff_sec <= 0) {
-            document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left passed">Hết hạn</span>';
+            document.getElementById("timev")[0].innerHTML = '<span class="trip-view-time_left passed">Hết hạn</span>';
             //document.getElementById("buyTrip").classList.add('ng-hide');
         } else {
             var diff = this.msToTime(diff_sec);
-            document.getElementsByTagName("timev")[0].innerHTML = '<span class="trip-view-time_left">'+diff+'</span>';
+            document.getElementById("trip_timev_"+response.id).innerHTML = '<span class="trip-view-time_left">'+diff+'</span>';
             //document.getElementById("buyTrip").classList.remove('ng-hide');
         }
     }
 
     $scope.showInfo = function (response, isBuyCallback = true) {
         var button = document.getElementById("buyTrip");
-        button.classList.add("disabled");
+        //button.classList.add("disabled");
         button.innerHTML = "Đã mua";
         document.getElementsByTagName("more")[0].classList.remove("ng-hide");
         document.getElementsByTagName("pnr")[0].innerHTML = response.PNR;
@@ -374,26 +366,27 @@ angular.module('starter.controllers', [])
 
     $scope.checkBuy = function (response) {
         $scope.thisTrip = response;
-        var button = document.getElementById("buyTrip");
+        var button = document.getElementById("buyTrip_"+response.id);
 
         if (parseInt(response.coin) <= 0) {
-            button.classList.add("disabled");
+            //button.classList.add("disabled");
             button.innerHTML = "Chuyến không có sẵn";
             button.removeAttribute("ng-click");
-            document.getElementsByTagName("pricebuyv")[0].innerHTML = "";
+            document.getElementById("trip_pricebuyv_"+response.id).innerHTML = "";
         } else {
             var pricebuy = parseInt(response.price)-parseInt(response.coin);
-            document.getElementsByTagName("pricebuyv")[0].innerHTML = 'Giá mua ngay: <b class="trip-coin-view">'+pricebuy+'k</b>';
+            console.log(document.getElementById("trip_pricebuyv_"+response.id));
+            document.getElementById("trip_pricebuyv_"+response.id).innerHTML = 'Giá mua ngay: <b class="trip-coin-view">'+pricebuy+'k</b>';
 
             if (response.taxiid == taxiData.id) {
                 $scope.showInfo(response, false);
             } else {
                 if (parseInt(response.status) == 1) { // taken
-                    button.classList.add("disabled");
+                    //button.classList.add("disabled");
                     button.innerHTML = "Chuyến đã được mua";
                     button.removeAttribute("ng-click");
                 } else if (pricebuy > parseInt(taxiData.coin)) { // not enough money
-                    button.classList.add("disabled");
+                    //button.classList.add("disabled");
                     button.innerHTML = "Bạn không đủ tiền";
                     button.removeAttribute("ng-click");
                 } else {
@@ -402,11 +395,11 @@ angular.module('starter.controllers', [])
                     var diff_sec = end_time - now;
 
                     if (diff_sec <= 0) {
-                        button.classList.add("disabled");
+                        //button.classList.add("disabled");
                         button.innerHTML = "Hết hạn";
                         button.removeAttribute("ng-click");
                     } else if (parseInt(response.seat) > parseInt(taxiData.seat)) {
-                        button.classList.add("disabled");
+                        //button.classList.add("disabled");
                         button.innerHTML = "Xe bạn không đủ chỗ";
                         button.removeAttribute("ng-click");
                     } else {
@@ -415,6 +408,7 @@ angular.module('starter.controllers', [])
                         //var divBtn = document.getElementById("trip_buy_button");
                         //divBtn.innerHTML = '<button ng-click="buy('+response.id+'}})" id="buyTrip" class="button button-assertive ng-hide">Mua chuyến</button>';
                         //button.setAttribute('ng-click', 'buy('+response.id+')');
+                        button.classList.remove('disabled');
                         $scope.theInterval = $interval(function(){
                             $scope.loadTimeLeft(response);
                         }.bind(this), 1000);
@@ -500,24 +494,30 @@ angular.module('starter.controllers', [])
         }
     }
 
-    TripsService.getOne($scope.tripID, taxiData.id).then(function(response) {
-            $scope.trip = response;
 
-            $scope.checkBuy(response);
+    $scope.loadItem = function () {
+        if (taxiData) {
+            $ionicLoading.show({
+                content: 'Loading',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
 
-            if (response.is_round == 0) {
-                document.getElementsByTagName("notround")[0].classList.remove("ng-hide");
-                document.getElementsByTagName("round")[0].classList.add("ng-hide");
-            } else {
-                document.getElementsByTagName("round")[0].classList.remove("ng-hide");
-                document.getElementsByTagName("notround")[0].classList.add("ng-hide");
-            }
-            $scope.trip = response; //Assign data received to $scope.data
+            TripsService.getOne($scope.tripID, taxiData.id).then(function(response) {
+                $scope.trip = response;
 
-            $ionicLoading.hide();
-        /*$timeout(function() {
-        }, 100);*/
-    });
+                $timeout(function() {
+                    $scope.checkBuy($scope.trip);
+                }, 100);
+
+                $ionicLoading.hide();
+            });
+        }
+    }
+
+    $scope.loadItem();
 })
 
 
