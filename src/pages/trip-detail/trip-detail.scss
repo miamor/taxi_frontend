@@ -1,0 +1,212 @@
+page-trip-detail {
+
+  p.trip-one-detail,
+  div.trip-one-detail,
+  pre.trip-one-detail {
+    position: relative;
+    display: block;
+    margin: 0 5px 5px
+  }
+
+  .trip-one-detail>* {
+    display: inline-block;
+    font-size: 15px
+  }
+
+  .trip-one-detail>span:first-child {
+    width: 120px!important 
+  }
+
+  .time_left {
+    color: #00a65a;
+    font-weight: 600;
+  }
+
+  .time_left.passed {
+    color: #e84c3d
+  }
+
+  .trip-details {
+    margin-top: 30px
+  }
+
+  .trip-view-timeleft {
+    text-align: center;
+    margin: 10px auto 0;
+    display: block
+  }
+
+  .trip-view-timeleft>* {
+    color: #00a65a;
+    border: 1px solid #dadada;
+    border-radius: 4px;
+    display: inline-block;
+
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: 0 2px 3px inset #333;
+    background: #d4e7e7;
+    padding: 5px 10px 3px !important;
+    margin: 0;
+    text-align: center
+  }
+
+  h3.trip-destinations {
+    font-size: 14px !important;
+    margin: 8px 0 10px !important
+  }
+
+  .trip-view-time_left.passed {
+    color: #e84c3d
+  }
+
+  .trip-info {
+    margin-bottom: 5px;
+    font-size: 14px
+  }
+
+  .trip-time {
+    font-weight: 600;
+    color: #bc5004;
+  }
+
+  .trip-seat {
+    font-weight: 600;
+    color: #a44abc
+  }
+
+  .trip-title,
+  .trip-title * {
+    font-size: 20px !important;
+    text-transform: capitalize
+  }
+
+  .center {
+    text-align: center
+  }
+
+  .trip-.buy {
+    margin-top: 20px
+  }
+
+  .trip-coin {
+    font-weight: 600;
+  }
+
+  .trip-coin,
+  .trip-coin-view,
+  .trip-pricecoin {
+    color: #c6c030
+  }
+
+  .trip-pricecoin {
+    font-weight: 600;
+    font-size: 24px;
+    float: left;
+    margin: 40px -69px 0;
+    width: 50px;
+    text-align: center
+  }
+
+  .trip-price {
+    font-weight: 600;
+    color: #0dabb4
+  }
+
+  .hist-pricecoin {
+    font-weight: 600;
+    font-size: 21px;
+    float: left;
+    margin: 8px -69px 0;
+    width: 50px;
+    text-align: center
+  }
+
+  .hist-pricecoin.buytrip {
+    color: #c6c030
+  }
+
+  .hist-pricecoin.error {
+    color: #e84c3d
+  }
+
+  .hist-pricecoin.add {
+    color: #00a65a
+  }
+
+  .trip-is_round {
+    color: #1a58b2;
+  }
+
+  .trip-num_guess {
+    font-weight: 600;
+    color: #49bcbb;
+  }
+
+  .buy {
+    color: #e84c3d;
+    font-weight: 600
+  }
+
+  .buy.my {
+    color: #1a58b2
+  }
+
+  .phone.trip-phone {
+    width: 200px;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 24px;
+    padding: 10px 15px 11px;
+    text-align: center;
+    margin: 20px auto;
+    font-size: 20px;
+    color: #b21b1b;
+    display: block
+  }
+
+  .trip-destinations {
+    font-size: 16px !important;
+    margin: 7px 0 5px !important
+  }
+
+  .trip-pnr {
+    font-weight: 600
+  }
+
+  .more,
+  .trip-more {
+    display: block;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd
+  }
+
+  .from,
+  .to,
+  .name {
+    font-weight: 600
+  }
+
+  .from {
+    color: #729b2d
+  }
+
+  .to {
+    color: #8139af
+  }
+
+  .round,
+  .notround {
+    font-size: 15px !important;
+    display: inline;
+    margin: 0 2px 0 3px
+  }
+
+  .round::before,
+  .notround:before {
+    font-size: 20px !important
+  }
+
+}

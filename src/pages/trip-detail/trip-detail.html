@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title class="book-div" *ngIf="tripInfo">
+      {{title}}
+      <div class="clearfix"></div>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding *ngIf="tripInfo">
+
+  <div class="oneTrip item item-remove-animate trip-item" id="view_trip_{{tripInfo.id}}" type="item-text-wrap">
+    <h3 class="trip-title center">
+      <b>{{tripInfo.addressfrom}}</b>
+      <ion-icon id="notround_{{tripInfo.id}}" class="notround" name="arrow-forward" *ngIf="tripInfo.is_one_round">
+      </ion-icon>
+      <ion-icon id="round_{{tripInfo.id}}" class="round" name="swap" *ngIf="tripInfo.is_round"></ion-icon>
+      <b>{{tripInfo.addressto}}</b>
+    </h3>
+    <time class="trip-view-timeleft" id="trip_timev_{{tripInfo.id}}" [innerHTML]="time_diff"></time>
+    <div class="trip-details">
+      <div class="trip-one-detail">
+        <span>Thời gian đón:</span> <b class="trip-time">{{tripInfo.time}}</b>
+      </div>
+      <div class="trip-one-detail">
+        <span>Số chỗ:</span> <b class="trip-seat">{{tripInfo.seat}} chỗ</b>
+      </div>
+      <div class="trip-one-detail">
+        <span>Số khách:</span> <b class="trip-num_guess">{{tripInfo.num_guess}} khách</b>
+      </div>
+      <div class="trip-one-detail">
+        <span>Số chiều:</span> <b class="trip-is_round">{{tripInfo.is_round_txt}}</b>
+      </div>
+      <div class="trip-one-detail">
+        <span>Giá khách trả:</span>
+        <div id="trip_price_{{tripInfo.id}}" class="price trip-price">{{tripInfo.price}}</div><span
+          class="trip-price">k</span>
+      </div>
+      <div class="trip-one-detail">
+        <span>Mua chuyến:</span>
+        <div class="pricebuyv" id="trip_pricebuyv_{{tripInfo.id}}">-{{tripInfo.coin}}</div>
+      </div>
+
+      <div *ngIf="owned === true" id="trip_more_{{tripInfo.id}}" class="more trip-more ng-hide">
+        <div class="trip-one-detail">
+          <span>Khách hàng:</span>
+          <div id="trip_name_{{tripInfo.id}}" class="name trip-name">{{tripInfo.name}}</div>
+        </div>
+        <div class="trip-one-detail">
+          <span>Từ:</span>
+          <div id="trip_from_{{tripInfo.id}}" class="from trip-from">{{tripInfo.addressfrom_full}}</div>
+        </div>
+        <div class="trip-one-detail">
+          <span>Đến:</span>
+          <div id="trip_to_{{tripInfo.id}}" class="to trip-to">{{tripInfo.addressto_full}}</div>
+        </div>
+        <div class="trip-one-detail">
+          <span>Mã PNR:</span>
+          <div id="trip_pnr_{{tripInfo.id}}" class="pnr trip-pnr">{{tripInfo.PNR}}</div>
+        </div>
+        <div class="trip-one-detail">
+          <span>Ghi chú:</span>
+          <div id="trip_details_{{tripInfo.id}}" class="detailss trip-details">{{tripInfo.note}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trip-buy center">
+      <div id="trip_buy_button" *ngIf="canbuy === true">
+        <button ion-button id="buyTrip_{{tripInfo.id}}" (click)="buy(tripInfo.id)" class="button button-assertive">Mua
+          chuyến</button>
+      </div>
+      <div id="trip_buy_button" *ngIf="buyed === true && owned === false">
+        <button ion-button id="buyTrip_{{tripInfo.id}}" disabled (click)="buy(tripInfo.id)"
+          class="button button-assertive disabled">Đã được mua</button>
+      </div>
+      <div id="trip_sell_button" *ngIf="owned === true">
+        <button *ngIf="outDate === false" ion-button id="sellTrip_{{tripInfo.id}}" (click)="sellTrip(tripInfo.id)"
+          class="button button-assertive">Bán lại</button>
+        <button *ngIf="outDate === true" disabled ion-button id="sellTrip_{{tripInfo.id}}"
+          (click)="sellTrip(tripInfo.id)" class="button button-assertive disabled">Bán lại</button>
+      </div>
+      <div id="trip_phone_{{tripInfo.id}}" *ngIf="owned === true" class="phone trip-phone">{{tripInfo.phone}}</div>
+    </div>
+
+  </div>
+</ion-content>
